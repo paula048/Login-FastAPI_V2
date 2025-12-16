@@ -4,6 +4,7 @@
 RUN
 ```
 npm install express body-parser mongoose bcrypt jsonwebtoken dotenv cors
+npm install pg
 ```
 
 Also to make sure
@@ -15,6 +16,6 @@ Create `.env` file in main path of your project
 ## Run server
 1) Go to server main Path
 2) Run server
-`
+```
 node app.js
-`
+```
