@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const { connectDB } = require('./config/db');
-
+var cors = require('cors')
 // Routes
 const authRoutes = require('./routes/auth');
 
@@ -12,6 +12,13 @@ const app = express();
 
 // Connect to database
 connectDB();
+
+
+
+app.use(cors({  origin: 'http://localhost:5173', 
+                credentials: true, 
+                methods: ['GET','POST','OPTIONS'], 
+                allowedHeaders: ['Content-Type','Authorization'] }));
 
 // Middleware
 app.use(express.json());

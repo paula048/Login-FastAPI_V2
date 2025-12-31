@@ -63,10 +63,9 @@ router.post('/login', async (req, res) => {
 
     // Find user
     const result = await pool.query(
-      'SELECT id, password FROM testowy.users WHERE email = $1',
+      'SELECT * FROM testowy.users WHERE email = $1',
       [email]
     );
-
     if (result.rows.length === 0) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
@@ -79,9 +78,32 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
+
+    // generate payload as object, bacause we set more than 1 things
+    const payload = { id: user.id };  
+    const userID = user.id;
+    
+    // GET 'roles' if exist
+    const resRoles = await pool.query(
+      'SELECT * FROM testowy.user_roles WHERE user_id = $1',
+      [userID]
+    );
+    if (resRoles.rows.length === 0) {
+      return res.status(400).json({ message: 'Invalid credentials for userRole' });
+    }
+    else{
+      const userRoles = resRoles.rows[0];
+      // ADD to payload
+      payload.roles = userRoles.role_id;
+
+    }
+    
+
+    
+// ------------------------------------------
     // Generate JWT
     const token = jwt.sign(
-      { id: user.id },
+      payload,
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
